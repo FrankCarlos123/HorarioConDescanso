@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Turnos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="nav-button" onclick="previousWeek()">&lt;</button>
+            <h2 id="date-range">28 Oct - 3 Nov</h2>
+            <button class="nav-button" onclick="nextWeek()">&gt;</button>
+        </div>
+
+        <div class="shift-list" id="shifts-container">
+            <!-- Los turnos se generarán dinámicamente aquí -->
+        </div>
+    </div>
+
+    <!-- Modal para editar turno -->
+    <div class="modal" id="shift-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Editar Turno</h3>
+            <div class="time-inputs">
+                <div class="time-input">
+                    <label>Hora inicio</label>
+                    <input type="time" id="start-time">
+                </div>
+                <div class="time-input">
+                    <label>Hora fin</label>
+                    <input type="time" id="end-time">
+                </div>
+            </div>
+            <div class="break-inputs">
+                <h4>Descanso (no pagado)</h4>
+                <div class="time-inputs">
+                    <div class="time-input">
+                        <label>Inicio descanso</label>
+                        <input type="time" id="break-start">
+                    </div>
+                    <div class="time-input">
+                        <label>Fin descanso</label>
+                        <input type="time" id="break-end">
+                    </div>
+                </div>
+            </div>
+            <div class="free-day-toggle">
+                <input type="checkbox" id="free-day-toggle">
+                <label for="free-day-toggle">Día libre</label>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-button cancel-button" onclick="closeModal()">Cancelar</button>
+                <button class="modal-button save-button" onclick="saveShift()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

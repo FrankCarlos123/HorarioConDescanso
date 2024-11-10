@@ -1,0 +1,390 @@
+:root {
+    --background: #121212;
+    --surface: #1e1e1e;
+    --surface-hover: #2d2d2d;
+    --primary: #ff9800;
+    --text: #ffffff;
+    --text-secondary: #a0a0a0;
+    --day-bg: #2d2d2d;
+    --day-text: #ffffff;
+    --free-day-bg: #2d2d2d;
+    --weekend-bg: #ff4545;
+    --border-color: #333333;
+    --modal-overlay: rgba(0, 0, 0, 0.8);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--surface);
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.nav-button {
+    background-color: var(--primary);
+    border: none;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: black;
+    transition: opacity 0.2s;
+}
+
+.nav-button:hover {
+    opacity: 0.9;
+}
+
+.shift-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.shift-card {
+    background-color: var(--surface);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.shift-card:hover {
+    background-color: var(--surface-hover);
+}
+
+.date-box {
+    background-color: var(--day-bg);
+    color: var(--day-text);
+    border-radius: 8px;
+    padding: 0.5rem;
+    width: 80px;
+    min-width: 80px;
+    height: 65px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.date-box.weekend {
+    background-color: var(--weekend-bg);
+}
+
+.date-box .day-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+}
+
+.date-box .day-name {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.shift-details {
+    flex-grow: 1;
+}
+
+.shift-time {
+    font-weight: bold;
+}
+
+.shift-time-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.break-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--modal-overlay);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--surface);
+    padding: 1.5rem;
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.break-inputs {
+    margin: 1rem 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.break-inputs h4 {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.time-inputs {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.time-input {
+    flex: 1;
+}
+
+.time-input input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: var(--day-bg);
+    color: var(--text);
+}
+
+.time-input label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.modal-button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.modal-button:hover {
+    opacity: 0.9;
+}
+
+.save-button {
+    background-color: var(--primary);
+    color: black;
+}
+
+.cancel-button {
+    background-color: var(--free-day-bg);
+    color: var(--text);
+}
+
+.free-day-toggle {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text);
+}
+
+.totals-card {
+    cursor: default !important;
+}
+
+.totals-row {
+    display: grid;
+    grid-template-columns: minmax(100px, 1fr) auto auto auto;
+    gap: 0.5rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+}
+
+.total-label {
+    min-width: auto;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.total-value {
+    min-width: auto;
+    text-align: right;
+    white-space: nowrap;
+    color: #fff;
+}
+
+.rate-input {
+    width: 50px;
+    text-align: center;
+    background: var(--surface-hover);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px;
+    color: var(--primary);
+    font-size: 0.9rem;
+    margin: 0;
+    font-weight: bold;
+}
+
+.money-earned {
+    min-width: auto;
+    text-align: right;
+    color: var(--primary);
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.total-final {
+    border-bottom: none;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    border-top: 2px solid var(--border-color);
+    font-weight: bold;
+}
+
+.total-final .total-value,
+.total-final .money-earned {
+    font-size: 1.1rem;
+    color: var(--primary);
+}
+
+/* Estilos para inputs especiales */
+input[type="time"], 
+input[type="number"] {
+    color-scheme: dark;
+}
+
+input[type="checkbox"] {
+    accent-color: var(--primary);
+}
+
+/* Quitar flechas de los inputs numéricos */
+.rate-input::-webkit-outer-spin-button,
+.rate-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.rate-input {
+    -moz-appearance: textfield;
+}
+
+/* Media query para pantallas móviles */
+@media (max-width: 480px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    .shift-card {
+        padding: 0.75rem;
+    }
+
+    .date-box {
+        width: 60px;
+        min-width: 60px;
+        height: 55px;
+    }
+
+    .totals-row {
+        font-size: 0.9rem;
+        gap: 0.25rem;
+    }
+
+    .rate-input {
+        width: 45px;
+        padding: 2px;
+        font-size: 0.85rem;
+    }
+
+    .break-inputs h4 {
+        font-size: 0.85rem;
+    }
+
+    .break-time {
+        font-size: 0.75rem;
+    }
+
+    .total-final {
+        font-size: 1rem;
+    }
+
+    .modal-content {
+        padding: 1rem;
+    }
+
+    .time-input input {
+        padding: 0.5rem;
+    }
+}
+
+/* Media query para pantallas muy pequeñas */
+@media (max-width: 360px) {
+    .totals-row {
+        font-size: 0.85rem;
+        gap: 0.25rem;
+    }
+
+    .rate-input {
+        width: 40px;
+    }
+
+    .date-box {
+        width: 50px;
+        min-width: 50px;
+    }
+
+    .date-box .day-number {
+        font-size: 1rem;
+    }
+
+    .date-box .day-name {
+        font-size: 0.7rem;
+    }
+
+    .break-time {
+        font-size: 0.7rem;
+    }
+}
