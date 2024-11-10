@@ -63,63 +63,76 @@ function formatDateRange(dates) {
     return `${start.toLocaleDateString('es-ES', options)} - ${end.toLocaleDateString('es-ES', options)}`;
 }
 
-function getMinutesBetween(start, end, nextDay = false) {
-    let startDate = new Date(`2000-01-01T${start}`);
-    let endDate = new Date(`2000-01-01T${end}`);
-    
-    if (nextDay || endDate < startDate) {
-        endDate = new Date(`2000-01-02T${end}`);
-    }
-    
-    return (endDate - startDate) / (1000 * 60);
-}
-
 function calculateHours(startTime, endTime, breakStart, breakEnd) {
-    let totalMinutes = getMinutesBetween(startTime, endTime, true);
+    // Convertir horas a minutos para facilitar el cálculo
+    function timeToMinutes(time) {
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours * 60 + minutes;
+    }
+
+    function adjustMinutes(minutes) {
+        if (minutes < 0) {
+            minutes += 24 * 60; // Añadir un día completo en minutos
+        }
+        return minutes;
+    }
+
+    // Obtener minutos totales
+    let startMinutes = timeToMinutes(startTime);
+    let endMinutes = timeToMinutes(endTime);
     
+    // Ajustar si el turno cruza la medianoche
+    if (endMinutes < startMinutes) {
+        endMinutes += 24 * 60; // Añadir un día completo
+    }
+
+    let totalMinutes = endMinutes - startMinutes;
+
     // Restar el tiempo de descanso si existe
     if (breakStart && breakEnd) {
-        let breakMinutes = getMinutesBetween(breakStart, breakEnd);
+        let breakStartMinutes = timeToMinutes(breakStart);
+        let breakEndMinutes = timeToMinutes(breakEnd);
+        
+        // Ajustar si el descanso cruza la medianoche
+        if (breakEndMinutes < breakStartMinutes) {
+            breakEndMinutes += 24 * 60;
+        }
+        
+        let breakMinutes = breakEndMinutes - breakStartMinutes;
         totalMinutes -= breakMinutes;
     }
 
-    // Convertir minutos totales a horas
-    const totalHours = totalMinutes / 60;
-    
+    // Calcular horas diurnas y nocturnas
     let dayHours = 0;
     let nightHours = 0;
     
-    // Definir límites de horario diurno
-    const dayStartTime = '08:00';
-    const dayEndTime = '22:00';
+    const dayStartMinutes = timeToMinutes('08:00');
+    const dayEndMinutes = timeToMinutes('22:00');
     
-    // Si el turno está completamente dentro del horario diurno
-    if (startTime >= dayStartTime && endTime <= dayEndTime) {
-        dayHours = totalHours;
-    }
-    // Si el turno está completamente fuera del horario diurno
-    else if (startTime >= dayEndTime || endTime <= dayStartTime) {
-        nightHours = totalHours;
-    }
-    // Si el turno cruza ambos horarios
-    else {
-        // Calcular parte diurna
-        if (startTime < dayStartTime) {
-            const morningNightMinutes = getMinutesBetween(startTime, dayStartTime);
-            nightHours += morningNightMinutes / 60;
-            totalMinutes -= morningNightMinutes;
+    let currentMinute = startMinutes;
+    let remainingMinutes = totalMinutes;
+
+    while (remainingMinutes > 0) {
+        let adjustedMinute = currentMinute;
+        while (adjustedMinute >= 24 * 60) {
+            adjustedMinute -= 24 * 60;
         }
-        
-        if (endTime > dayEndTime) {
-            const eveningNightMinutes = getMinutesBetween(dayEndTime, endTime);
-            nightHours += eveningNightMinutes / 60;
-            totalMinutes -= eveningNightMinutes;
+
+        // Determinar si el minuto actual está en horario diurno o nocturno
+        if (adjustedMinute >= dayStartMinutes && adjustedMinute < dayEndMinutes) {
+            dayHours += 1/60;
+        } else {
+            nightHours += 1/60;
         }
-        
-        dayHours = totalMinutes / 60;
+
+        currentMinute++;
+        remainingMinutes--;
     }
-    
-    return { dayHours, nightHours };
+
+    return { 
+        dayHours: Math.round(dayHours * 10) / 10, 
+        nightHours: Math.round(nightHours * 10) / 10 
+    };
 }
 
 function updateShifts() {
